@@ -1,4 +1,4 @@
-package ru.darf.weathercompose.utils.viewmodel
+package ru.darf.weathercompose.core.viewmodel
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package ru.darf.weathercompose.utils.compose
+package ru.darf.weathercompose.core.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls

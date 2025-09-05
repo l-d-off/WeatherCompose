@@ -1,4 +1,4 @@
-package ru.darf.weathercompose.utils.ext
+package ru.darf.weathercompose.core.ext
 
 import java.util.UUID
 import kotlin.jvm.internal.ClassBasedDeclarationContainer

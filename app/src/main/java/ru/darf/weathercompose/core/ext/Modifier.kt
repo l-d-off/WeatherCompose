@@ -1,4 +1,4 @@
-package ru.darf.weathercompose.utils.ext
+package ru.darf.weathercompose.core.ext
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

@@ -1,7 +1,7 @@
-package ru.darf.weathercompose.utils.router
+package ru.darf.weathercompose.core.router
 
 import androidx.navigation.NavHostController
-import ru.darf.weathercompose.utils.ext.getQualifiedName
+import ru.darf.weathercompose.core.ext.getQualifiedName
 
 /** [routeDefault] принимает имя класса, в котором компаньон наследует [ScreenCompanionRouter] */
 abstract class ScreenCompanionRouter {

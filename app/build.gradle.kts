@@ -62,7 +62,6 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.foundation)
-    implementation(libs.compose.material)
     implementation(libs.compose.material3)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
@@ -87,10 +86,17 @@ dependencies {
     // Navigation
     implementation(libs.navigation.compose)
 
-    // Retrofit
+    // OkHttp
     implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.okhttp3.okhttp)
+
+    // Retrofit
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.retrofit2.converter.scalars)
     implementation(libs.retrofit2.retrofit)
+
+    // Room
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
 }
