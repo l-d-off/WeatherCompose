@@ -12,9 +12,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.darf.weathercompose.R
 import ru.darf.weathercompose.core.viewmodel.BaseViewModel
+import ru.darf.weathercompose.data.local.DataStorePrefs
 import ru.darf.weathercompose.domain.model.NetworkState
 import ru.darf.weathercompose.domain.usecase.GetLocalCitiesUseCase
 import ru.darf.weathercompose.domain.usecase.GetWeathersUseCase
+import ru.darf.weathercompose.ui.main.APP_GRAPH
+import ru.darf.weathercompose.ui.screen.auth.AuthScreen
 import ru.darf.weathercompose.ui.screen.cities.CitiesScreen
 import ru.darf.weathercompose.ui.screen.weather.model.WeatherUi
 import javax.inject.Inject
@@ -24,6 +27,7 @@ class WeatherViewModel @Inject constructor(
     private val getWeathersUseCase: GetWeathersUseCase,
     private val getLocalCitiesUseCase: GetLocalCitiesUseCase,
     @param:ApplicationContext private val context: Context,
+    private val prefs: DataStorePrefs,
 ) : BaseViewModel() {
 
     private val _viewState = MutableStateFlow(WeatherViewState())
@@ -83,6 +87,19 @@ class WeatherViewModel @Inject constructor(
 
     fun goToCitiesScreen(navController: NavHostController) {
         CitiesScreen.navigate(navController)
+    }
+
+    fun signOut(navController: NavHostController) {
+        viewModelScope.launch {
+            prefs.deleteUserData()
+            navController.navigate(AuthScreen.route) {
+                popUpTo(AuthScreen.route) {
+                    inclusive = true
+                    saveState = false
+                }
+                restoreState = false
+            }
+        }
     }
 
     fun startLoading() {

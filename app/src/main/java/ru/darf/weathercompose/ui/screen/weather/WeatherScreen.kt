@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -67,19 +68,34 @@ private fun WeatherContent(
             TopBar(
                 title = stringResource(R.string.weather_screen_title),
                 actions = {
-                    IconButton(
-                        onClick = {
-                            viewModel.goToCitiesScreen(
-                                navController = navController
-                            )
-                        },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Default.Place,
-                                contentDescription = "Cities"
-                            )
-                        }
-                    )
+                    Row {
+                        IconButton(
+                            onClick = {
+                                viewModel.goToCitiesScreen(
+                                    navController = navController
+                                )
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Default.Place,
+                                    contentDescription = "Cities"
+                                )
+                            }
+                        )
+                        IconButton(
+                            onClick = {
+                                viewModel.signOut(
+                                    navController = navController
+                                )
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                                    contentDescription = "Sign out"
+                                )
+                            }
+                        )
+                    }
                 }
             )
         }
