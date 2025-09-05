@@ -1,4 +1,4 @@
-package ru.darf.weathercompose.ui.theme
+package ru.darf.weathercompose.ui.res
 
 import androidx.compose.ui.graphics.Color
 

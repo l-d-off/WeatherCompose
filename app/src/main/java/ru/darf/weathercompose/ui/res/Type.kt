@@ -1,4 +1,4 @@
-package ru.darf.weathercompose.ui.theme
+package ru.darf.weathercompose.ui.res
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
