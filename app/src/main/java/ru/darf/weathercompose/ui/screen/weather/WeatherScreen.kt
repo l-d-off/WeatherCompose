@@ -126,6 +126,7 @@ private fun WeatherContent(
                         key = { weather -> weather.city.id }
                     ) { weather ->
                         Card(
+                            modifier = Modifier.animateItem(),
                             content = {
                                 Row(
                                     modifier = Modifier.padding(16.dp),
