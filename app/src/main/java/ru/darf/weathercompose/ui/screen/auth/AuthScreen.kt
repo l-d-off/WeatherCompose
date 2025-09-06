@@ -1,6 +1,5 @@
 package ru.darf.weathercompose.ui.screen.auth
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,7 +55,9 @@ private fun AuthContent(
     viewState: AuthViewState,
     navController: NavHostController,
 ) {
+
     val context = LocalContext.current
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color.Unspecified,
@@ -70,11 +71,11 @@ private fun AuthContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.Center,
+                .padding(horizontal = 16.dp)
+                .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(Modifier.height(192.dp))
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewState.login,

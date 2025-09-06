@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -33,7 +34,7 @@ class WeatherViewModel @Inject constructor(
     val viewState = _viewState.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        val firstJob = viewModelScope.launch {
             startLoading()
             val cities = getLocalCitiesUseCase()
             val response = getWeathersUseCase(
@@ -81,6 +82,37 @@ class WeatherViewModel @Inject constructor(
                 }
             }
             stopLoading()
+        }
+        viewModelScope.launch {
+            firstJob.join()
+            while (true) {
+                delay(5000L)
+                val cities = getLocalCitiesUseCase()
+                val response = getWeathersUseCase(
+                    latitudeString = cities.joinToString(",") { it.latitude.toString() },
+                    longitudeString = cities.joinToString(",") { it.longitude.toString() }
+                )
+                when (response) {
+                    is NetworkState.Success -> {
+                        val weathers = response.data ?: return@launch
+                        _viewState.update {
+                            it.copy(
+                                weathers = weathers.zip(cities) { weather, city ->
+                                    WeatherUi(
+                                        city = city,
+                                        temperature = weather.temperature,
+                                        weatherCondition = weather.getWeatherCondition()
+                                    )
+                                }
+                            )
+                        }
+                    }
+
+                    is NetworkState.Error -> {}
+
+                    is NetworkState.ServerError -> {}
+                }
+            }
         }
     }
 

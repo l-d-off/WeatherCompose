@@ -1,6 +1,7 @@
 package ru.darf.weathercompose.ui.main
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
@@ -24,7 +25,8 @@ fun NavGraph(
     Scaffold(
         modifier = Modifier
             .systemBarsPadding()
-            .fillMaxSize(),
+            .fillMaxSize()
+            .imePadding(),
         containerColor = Color.Unspecified,
         contentColor = Color.Unspecified
     ) { innerPadding ->
