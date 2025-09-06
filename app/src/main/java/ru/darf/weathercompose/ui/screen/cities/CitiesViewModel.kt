@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.darf.weathercompose.R
-import ru.darf.weathercompose.core.logger.logE
 import ru.darf.weathercompose.core.viewmodel.BaseViewModel
 import ru.darf.weathercompose.domain.model.City
 import ru.darf.weathercompose.domain.model.NetworkState
@@ -127,7 +126,7 @@ class CitiesViewModel @Inject constructor(
     fun deleteCity(city: City) {
         viewModelScope.launch {
             startLoading()
-            deleteCityUseCase(city)
+            deleteCityUseCase(city.id)
             val cities = getLocalCitiesUseCase()
             _viewState.update {
                 it.copy(

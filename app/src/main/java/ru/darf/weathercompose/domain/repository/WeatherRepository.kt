@@ -20,5 +20,5 @@ interface WeatherRepository {
 
     suspend fun insertCity(city: City)
 
-    suspend fun deleteCity(city: City)
+    suspend fun deleteCityById(cityId: Int)
 }

@@ -1,10 +1,10 @@
 package ru.darf.weathercompose.ui.screen.cities
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -42,9 +43,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import ru.darf.weathercompose.R
+import ru.darf.weathercompose.core.logger.logE
 import ru.darf.weathercompose.core.router.ScreenCompanionRouter
 import ru.darf.weathercompose.core.ui.CircularProgressBar
 import ru.darf.weathercompose.core.ui.TopBar
+import ru.darf.weathercompose.domain.model.City
 
 class CitiesScreen(
     private val navBuilder: NavGraphBuilder,
@@ -118,6 +121,7 @@ private fun CitiesContent(
                         }
                     )
                     SwipeToDismissBox(
+                        modifier = Modifier.animateContentSize(),
                         state = dismissState,
                         enableDismissFromStartToEnd = false,
                         backgroundContent = {
@@ -135,7 +139,6 @@ private fun CitiesContent(
                         }
                     ) {
                         Card(
-                            modifier = Modifier.animateItem(),
                             content = {
                                 Column(
                                     modifier = Modifier
@@ -172,77 +175,92 @@ private fun CitiesContent(
         }
     }
     if (viewState.openSearchCityDialog) {
-        Dialog(
-            onDismissRequest = {
+        SearchCitiesDialog(
+            viewState = viewState,
+            onDismiss = {
                 viewModel.updateOpenSearchCityDialog(false)
+            },
+            onUpdateSearchText = viewModel::updateSearchText,
+            onSelectCity = viewModel::insertCity
+        )
+    }
+}
+
+@Composable
+private fun SearchCitiesDialog(
+    viewState: CitiesViewState,
+    onDismiss: () -> Unit,
+    onUpdateSearchText: (TextFieldValue) -> Unit,
+    onSelectCity: (City) -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onDismiss
+    ) {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.7f)
+                .clip(RoundedCornerShape(8.dp)),
+            containerColor = Color.White,
+            contentColor = Color.Unspecified,
+            topBar = {
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = viewState.searchText,
+                    onValueChange = onUpdateSearchText,
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.cities_screen_placeholder_search),
+                            color = Color.LightGray
+                        )
+                    },
+                    maxLines = 1
+                )
             }
-        ) {
-            Scaffold(
+        ) { innerPadding ->
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.7f)
-                    .clip(RoundedCornerShape(8.dp)),
-                containerColor = Color.White,
-                contentColor = Color.Unspecified,
-                topBar = {
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = viewState.searchText,
-                        onValueChange = viewModel::updateSearchText,
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.cities_screen_placeholder_search),
-                                color = Color.LightGray
-                            )
-                        },
-                        maxLines = 1
-                    )
-                }
-            ) { innerPadding ->
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    if (viewState.searchCities.isNotEmpty()) {
-                        items(
-                            items = viewState.searchCities,
-                        ) { city ->
-                            Card(
-                                onClick = {
-                                    viewModel.insertCity(city)
-                                    viewModel.updateOpenSearchCityDialog(false)
-                                },
-                                content = {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (viewState.searchCities.isNotEmpty()) {
+                    items(
+                        items = viewState.searchCities,
+                    ) { city ->
+                        Card(
+                            onClick = {
+                                onSelectCity(city)
+                                onDismiss()
+                            },
+                            content = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        text = city.name,
+                                        fontSize = 20.sp
+                                    )
+                                    if (city.region.isNotBlank()) {
                                         Text(
-                                            text = city.name,
-                                            fontSize = 20.sp
+                                            text = city.region,
+                                            fontSize = 14.sp
                                         )
-                                        if (city.region.isNotBlank()) {
-                                            Text(
-                                                text = city.region,
-                                                fontSize = 14.sp
-                                            )
-                                        }
                                     }
                                 }
-                            )
-                        }
-                    } else {
-                        item {
-                            Text(
-                                text = stringResource(R.string.cities_screen_stub_empty_search),
-                                fontSize = 20.sp
-                            )
-                        }
+                            }
+                        )
+                    }
+                } else {
+                    item {
+                        Text(
+                            text = stringResource(R.string.cities_screen_stub_empty_search),
+                            fontSize = 20.sp
+                        )
                     }
                 }
             }

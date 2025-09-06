@@ -68,8 +68,7 @@ class WeatherRepositoryImpl @Inject constructor(
         cityDao.insert(cityEntity)
     }
 
-    override suspend fun deleteCity(city: City) {
-        val cityEntity = cityMapper.mapToEntity(city)
-        cityDao.delete(cityEntity)
+    override suspend fun deleteCityById(cityId: Int) {
+        cityDao.delete(cityId)
     }
 }
