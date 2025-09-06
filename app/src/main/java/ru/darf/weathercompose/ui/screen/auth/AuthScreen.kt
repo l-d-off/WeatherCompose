@@ -85,7 +85,7 @@ private fun AuthContent(
                         color = Color.LightGray
                     )
                 },
-                maxLines = 1
+                singleLine = true,
             )
             Spacer(Modifier.height(8.dp))
             TextField(
@@ -98,7 +98,7 @@ private fun AuthContent(
                         color = Color.LightGray
                     )
                 },
-                maxLines = 1,
+                singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password
                 ),

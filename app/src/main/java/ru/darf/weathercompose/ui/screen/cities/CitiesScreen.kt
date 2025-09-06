@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -43,7 +44,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import ru.darf.weathercompose.R
-import ru.darf.weathercompose.core.logger.logE
 import ru.darf.weathercompose.core.router.ScreenCompanionRouter
 import ru.darf.weathercompose.core.ui.CircularProgressBar
 import ru.darf.weathercompose.core.ui.TopBar
@@ -80,7 +80,7 @@ private fun CitiesContent(
         contentColor = Color.Unspecified,
         topBar = {
             TopBar(
-                title = stringResource(R.string.weather_screen_title),
+                title = stringResource(R.string.cities_screen_title),
                 onBackClick = {
                     viewModel.popBackStack(navController)
                 },
@@ -214,7 +214,13 @@ private fun SearchCitiesDialog(
                             color = Color.LightGray
                         )
                     },
-                    maxLines = 1
+                    singleLine = true,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search field"
+                        )
+                    }
                 )
             }
         ) { innerPadding ->
