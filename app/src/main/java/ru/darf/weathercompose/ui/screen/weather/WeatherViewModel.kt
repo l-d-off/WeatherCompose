@@ -16,7 +16,6 @@ import ru.darf.weathercompose.data.local.DataStorePrefs
 import ru.darf.weathercompose.domain.model.NetworkState
 import ru.darf.weathercompose.domain.usecase.GetLocalCitiesUseCase
 import ru.darf.weathercompose.domain.usecase.GetWeathersUseCase
-import ru.darf.weathercompose.ui.main.APP_GRAPH
 import ru.darf.weathercompose.ui.screen.auth.AuthScreen
 import ru.darf.weathercompose.ui.screen.cities.CitiesScreen
 import ru.darf.weathercompose.ui.screen.weather.model.WeatherUi

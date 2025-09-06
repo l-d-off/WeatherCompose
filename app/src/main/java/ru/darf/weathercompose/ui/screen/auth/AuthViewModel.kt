@@ -35,8 +35,23 @@ class AuthViewModel @Inject constructor(
             val loginString = state.login.text
             val passwordString = state.password.text
 
-            checkLoginNotBlank(context, loginString)
-            checkPasswordNotBlank(context, passwordString)
+            if (loginString.isBlank()) {
+                Toast.makeText(
+                    context,
+                    R.string.auth_screen_alert_login_not_blank,
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+
+            if (passwordString.isBlank()) {
+                Toast.makeText(
+                    context,
+                    R.string.auth_screen_alert_password_not_blank,
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
 
             prefs.updateUserData {
                 UserData(
@@ -50,26 +65,6 @@ class AuthViewModel @Inject constructor(
                     inclusive = true
                 }
             }
-        }
-    }
-
-    fun checkLoginNotBlank(context: Context, login: String) {
-        if (login.isBlank()) {
-            Toast.makeText(
-                context,
-                R.string.auth_screen_alert_login_not_blank,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    fun checkPasswordNotBlank(context: Context, password: String) {
-        if (password.isBlank()) {
-            Toast.makeText(
-                context,
-                R.string.auth_screen_alert_password_not_blank,
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
