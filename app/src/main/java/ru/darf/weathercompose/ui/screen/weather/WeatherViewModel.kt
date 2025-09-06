@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,8 +34,10 @@ class WeatherViewModel @Inject constructor(
     private val _viewState = MutableStateFlow(WeatherViewState())
     val viewState = _viewState.asStateFlow()
 
+    private var refreshJob: Job? = null
+
     init {
-        val firstJob = viewModelScope.launch {
+        viewModelScope.launch {
             startLoading()
             val cities = getLocalCitiesUseCase()
             val response = getWeathersUseCase(
@@ -82,13 +85,6 @@ class WeatherViewModel @Inject constructor(
                 }
             }
             stopLoading()
-        }
-        viewModelScope.launch {
-            firstJob.join()
-            while (true) {
-                delay(10000L)
-                refreshData()
-            }
         }
     }
 
@@ -157,5 +153,22 @@ class WeatherViewModel @Inject constructor(
 
             is NetworkState.ServerError -> {}
         }
+    }
+
+    fun startRefreshing() {
+        if (refreshJob?.isActive == true) {
+            return
+        }
+        refreshJob = viewModelScope.launch {
+            while (true) {
+                delay(10_000L)
+                refreshData()
+            }
+        }
+    }
+
+    fun stopRefreshing() {
+        refreshJob?.cancel()
+        refreshJob = null
     }
 }

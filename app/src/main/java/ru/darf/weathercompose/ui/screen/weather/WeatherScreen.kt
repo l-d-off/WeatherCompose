@@ -32,6 +32,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import ru.darf.weathercompose.R
+import ru.darf.weathercompose.core.compose.LifecycleEvent
 import ru.darf.weathercompose.core.router.ScreenCompanionRouter
 import ru.darf.weathercompose.core.ui.CircularProgressBar
 import ru.darf.weathercompose.core.ui.TopBar
@@ -47,6 +48,11 @@ class WeatherScreen(
 
         val viewModel = hiltViewModel<WeatherViewModel>(entry)
         val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+
+        LifecycleEvent(
+            onStart = viewModel::startRefreshing,
+            onStop = viewModel::stopRefreshing
+        )
 
         WeatherContent(
             viewModel = viewModel,
