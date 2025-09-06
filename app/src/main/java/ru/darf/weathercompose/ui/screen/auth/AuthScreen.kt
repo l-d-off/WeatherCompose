@@ -107,7 +107,6 @@ private fun AuthContent(
                     placeholder = {
                         Text(
                             text = stringResource(R.string.auth_screen_placeholder_login),
-                            color = Color.LightGray
                         )
                     },
                     singleLine = true,
@@ -120,7 +119,6 @@ private fun AuthContent(
                     placeholder = {
                         Text(
                             text = stringResource(R.string.auth_screen_placeholder_password),
-                            color = Color.LightGray
                         )
                     },
                     singleLine = true,
@@ -138,7 +136,6 @@ private fun AuthContent(
                     content = {
                         Text(
                             text = stringResource(R.string.auth_screen_button_sign_in),
-                            color = Color.White
                         )
                     }
                 )

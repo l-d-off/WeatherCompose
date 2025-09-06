@@ -210,7 +210,6 @@ private fun SearchCitiesDialog(
                     placeholder = {
                         Text(
                             text = stringResource(R.string.cities_screen_placeholder_search),
-                            color = Color.LightGray
                         )
                     },
                     singleLine = true,
