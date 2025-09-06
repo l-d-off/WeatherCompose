@@ -86,32 +86,8 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch {
             firstJob.join()
             while (true) {
-                delay(5000L)
-                val cities = getLocalCitiesUseCase()
-                val response = getWeathersUseCase(
-                    latitudeString = cities.joinToString(",") { it.latitude.toString() },
-                    longitudeString = cities.joinToString(",") { it.longitude.toString() }
-                )
-                when (response) {
-                    is NetworkState.Success -> {
-                        val weathers = response.data ?: return@launch
-                        _viewState.update {
-                            it.copy(
-                                weathers = weathers.zip(cities) { weather, city ->
-                                    WeatherUi(
-                                        city = city,
-                                        temperature = weather.temperature,
-                                        weatherCondition = weather.getWeatherCondition()
-                                    )
-                                }
-                            )
-                        }
-                    }
-
-                    is NetworkState.Error -> {}
-
-                    is NetworkState.ServerError -> {}
-                }
+                delay(10000L)
+                refreshData()
             }
         }
     }
@@ -144,6 +120,42 @@ class WeatherViewModel @Inject constructor(
             it.copy(
                 isLoading = false
             )
+        }
+    }
+
+    fun refreshTrigger() {
+        _viewState.update { it.copy(isRefreshing = true) }
+        viewModelScope.launch {
+            refreshData()
+            _viewState.update { it.copy(isRefreshing = false) }
+        }
+    }
+
+    private suspend fun refreshData() {
+        val cities = getLocalCitiesUseCase()
+        val response = getWeathersUseCase(
+            latitudeString = cities.joinToString(",") { it.latitude.toString() },
+            longitudeString = cities.joinToString(",") { it.longitude.toString() }
+        )
+        when (response) {
+            is NetworkState.Success -> {
+                val weathers = response.data ?: return
+                _viewState.update {
+                    it.copy(
+                        weathers = weathers.zip(cities) { weather, city ->
+                            WeatherUi(
+                                city = city,
+                                temperature = weather.temperature,
+                                weatherCondition = weather.getWeatherCondition()
+                            )
+                        }
+                    )
+                }
+            }
+
+            is NetworkState.Error -> {}
+
+            is NetworkState.ServerError -> {}
         }
     }
 }
