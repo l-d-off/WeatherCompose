@@ -6,5 +6,5 @@ import ru.darf.weathercompose.domain.model.UserData
 interface UserDataRepository {
     fun getUserData(): Flow<UserData>
     suspend fun updateUserData(onUpdate: (UserData) -> UserData)
-    suspend fun deleteUserData() = updateUserData { UserData() }
+    suspend fun deleteUserData()
 }

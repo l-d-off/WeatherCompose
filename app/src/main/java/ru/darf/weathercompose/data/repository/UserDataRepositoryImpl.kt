@@ -17,4 +17,8 @@ class UserDataRepositoryImpl @Inject constructor(
     override suspend fun updateUserData(onUpdate: (UserData) -> UserData) {
         prefs.updateUserData(onUpdate)
     }
+
+    override suspend fun deleteUserData() {
+        prefs.deleteUserData()
+    }
 }

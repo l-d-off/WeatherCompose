@@ -3,7 +3,6 @@ package ru.darf.weathercompose.data.local
 import android.content.Context
 import androidx.datastore.dataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
 import ru.darf.weathercompose.BuildConfig
 import ru.darf.weathercompose.domain.model.UserData
 import javax.inject.Inject
@@ -23,8 +22,6 @@ class DataStorePrefs @Inject constructor(
     suspend fun updateUserData(
         onUpdate: (UserData) -> UserData,
     ) = context.dataStore.updateData { onUpdate(it) }
-
-    suspend fun hasUserData() = context.dataStore.data.first().login != null
 
     suspend fun deleteUserData() {
         updateUserData { UserData() }
