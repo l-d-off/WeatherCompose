@@ -2,7 +2,9 @@ package ru.darf.weathercompose.core.router
 
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.Navigator
+import androidx.navigation.navOptions
 import ru.darf.weathercompose.core.ext.getQualifiedName
 
 /** [routeDefault] принимает имя класса, в котором компаньон наследует [ScreenCompanionRouter] */
@@ -17,12 +19,10 @@ abstract class ScreenCompanionRouter {
     // Навигация
     open fun navigate(
         host: NavHostController,
-        navOptions: NavOptions? = null,
-        navigatorExtras: Navigator.Extras? = null,
+        builder: NavOptionsBuilder.() -> Unit = {},
     ) = host.navigate(
         route = route,
-        navOptions = navOptions,
-        navigatorExtras = navigatorExtras
+        builder = builder
     )
 
     // Получаем route с параметрами

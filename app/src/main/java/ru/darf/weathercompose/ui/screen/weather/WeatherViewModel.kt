@@ -93,11 +93,9 @@ class WeatherViewModel @Inject constructor(
         viewModelScope.launch {
             prefs.deleteUserData()
             navController.navigate(AuthScreen.route) {
-                popUpTo(AuthScreen.route) {
+                popUpTo(WeatherScreen.route) {
                     inclusive = true
-                    saveState = false
                 }
-                restoreState = false
             }
         }
     }

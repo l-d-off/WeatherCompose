@@ -2,7 +2,6 @@ package ru.darf.weathercompose.ui.screen.splash
 
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import androidx.navigation.navOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,23 +20,17 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             delay(1000)
             when (prefs.hasUserData()) {
-                true -> WeatherScreen.navigate(
-                    host = navController,
-                    navOptions = navOptions {
-                        popUpTo(SplashScreen.route) {
-                            inclusive = true
-                        }
+                true -> WeatherScreen.navigate(navController) {
+                    popUpTo(SplashScreen.route) {
+                        inclusive = true
                     }
-                )
+                }
 
-                false -> AuthScreen.navigate(
-                    host = navController,
-                    navOptions = navOptions {
-                        popUpTo(SplashScreen.route) {
-                            inclusive = true
-                        }
+                false -> AuthScreen.navigate(navController) {
+                    popUpTo(SplashScreen.route) {
+                        inclusive = true
                     }
-                )
+                }
             }
         }
     }

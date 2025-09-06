@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import androidx.navigation.navOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,6 +15,7 @@ import ru.darf.weathercompose.R
 import ru.darf.weathercompose.data.local.DataStorePrefs
 import ru.darf.weathercompose.core.viewmodel.BaseViewModel
 import ru.darf.weathercompose.data.model.UserData
+import ru.darf.weathercompose.ui.main.APP_GRAPH
 import ru.darf.weathercompose.ui.screen.weather.WeatherScreen
 import javax.inject.Inject
 
@@ -43,7 +45,11 @@ class AuthViewModel @Inject constructor(
                 )
             }
 
-            WeatherScreen.navigate(navController)
+            WeatherScreen.navigate(navController) {
+                popUpTo(AuthScreen.route) {
+                    inclusive = true
+                }
+            }
         }
     }
 
