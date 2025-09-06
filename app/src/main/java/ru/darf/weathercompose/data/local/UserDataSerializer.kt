@@ -3,7 +3,7 @@ package ru.darf.weathercompose.data.local
 import androidx.datastore.core.Serializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import ru.darf.weathercompose.data.model.UserData
+import ru.darf.weathercompose.domain.model.UserData
 import java.io.InputStream
 import java.io.OutputStream
 

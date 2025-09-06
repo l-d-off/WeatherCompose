@@ -21,10 +21,10 @@ import ru.darf.weathercompose.R
 import ru.darf.weathercompose.core.viewmodel.BaseViewModel
 import ru.darf.weathercompose.domain.model.City
 import ru.darf.weathercompose.domain.model.NetworkState
-import ru.darf.weathercompose.domain.usecase.DeleteCityUseCase
-import ru.darf.weathercompose.domain.usecase.GetCitiesUseCase
-import ru.darf.weathercompose.domain.usecase.GetLocalCitiesUseCase
-import ru.darf.weathercompose.domain.usecase.InsertCityUseCase
+import ru.darf.weathercompose.domain.usecase.weather.DeleteCityUseCase
+import ru.darf.weathercompose.domain.usecase.weather.GetCitiesUseCase
+import ru.darf.weathercompose.domain.usecase.weather.GetLocalCitiesUseCase
+import ru.darf.weathercompose.domain.usecase.weather.InsertCityUseCase
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)

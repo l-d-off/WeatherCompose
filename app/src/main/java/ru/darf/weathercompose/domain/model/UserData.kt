@@ -1,4 +1,4 @@
-package ru.darf.weathercompose.data.model
+package ru.darf.weathercompose.domain.model
 
 import kotlinx.serialization.Serializable
 

@@ -1,4 +1,4 @@
-package ru.darf.weathercompose.domain.usecase
+package ru.darf.weathercompose.domain.usecase.weather
 
 import ru.darf.weathercompose.domain.model.NetworkState
 import ru.darf.weathercompose.domain.model.WeatherToday

@@ -16,10 +16,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.darf.weathercompose.R
 import ru.darf.weathercompose.core.viewmodel.BaseViewModel
-import ru.darf.weathercompose.data.local.DataStorePrefs
 import ru.darf.weathercompose.domain.model.NetworkState
-import ru.darf.weathercompose.domain.usecase.GetLocalCitiesUseCase
-import ru.darf.weathercompose.domain.usecase.GetWeathersUseCase
+import ru.darf.weathercompose.domain.usecase.userdata.DeleteUserDataUseCase
+import ru.darf.weathercompose.domain.usecase.weather.GetLocalCitiesUseCase
+import ru.darf.weathercompose.domain.usecase.weather.GetWeathersUseCase
 import ru.darf.weathercompose.ui.screen.auth.AuthScreen
 import ru.darf.weathercompose.ui.screen.cities.CitiesScreen
 import ru.darf.weathercompose.ui.screen.weather.model.WeatherUi
@@ -29,8 +29,8 @@ import javax.inject.Inject
 class WeatherViewModel @Inject constructor(
     private val getWeathersUseCase: GetWeathersUseCase,
     private val getLocalCitiesUseCase: GetLocalCitiesUseCase,
+    private val deleteUserDataUseCase: DeleteUserDataUseCase,
     @param:ApplicationContext private val context: Context,
-    private val prefs: DataStorePrefs,
 ) : BaseViewModel() {
 
     private val _viewState = MutableStateFlow(WeatherViewState())
@@ -96,7 +96,7 @@ class WeatherViewModel @Inject constructor(
 
     fun signOut(navController: NavHostController) {
         viewModelScope.launch {
-            prefs.deleteUserData()
+            deleteUserDataUseCase()
             navController.navigate(AuthScreen.route) {
                 popUpTo(WeatherScreen.route) {
                     inclusive = true

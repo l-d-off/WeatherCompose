@@ -5,7 +5,7 @@ import androidx.datastore.dataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import ru.darf.weathercompose.BuildConfig
-import ru.darf.weathercompose.data.model.UserData
+import ru.darf.weathercompose.domain.model.UserData
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +17,8 @@ class DataStorePrefs @Inject constructor(
         fileName = "local_data_${BuildConfig.APPLICATION_ID}.json",
         serializer = UserDataSerializer(CryptoManager(context))
     )
+
+    fun getUserDataFlow() = context.dataStore.data
 
     suspend fun updateUserData(
         onUpdate: (UserData) -> UserData,
