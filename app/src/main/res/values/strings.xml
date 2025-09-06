@@ -19,6 +19,7 @@
     <string name="weather_screen_stub_empty_weathers">Список городов пуст</string>
 
     <!-- CitiesScreen -->
+    <string name="cities_screen_title">Города</string>
 
 
 </resources>

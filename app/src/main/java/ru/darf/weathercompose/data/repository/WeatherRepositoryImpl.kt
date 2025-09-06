@@ -61,4 +61,14 @@ class WeatherRepositoryImpl @Inject constructor(
         val cities = cityDao.getAll()
         return cityMapper.mapToDomain(cities)
     }
+
+    override suspend fun insertCity(city: City) {
+        val cityEntity = cityMapper.mapToEntity(city)
+        cityDao.insert(cityEntity)
+    }
+
+    override suspend fun deleteCity(city: City) {
+        val cityEntity = cityMapper.mapToEntity(city)
+        cityDao.delete(cityEntity)
+    }
 }

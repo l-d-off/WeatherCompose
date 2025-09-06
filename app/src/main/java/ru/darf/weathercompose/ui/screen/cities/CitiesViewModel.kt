@@ -1,75 +1,44 @@
 package ru.darf.weathercompose.ui.screen.cities
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.darf.weathercompose.R
-import ru.darf.weathercompose.core.logger.logE
 import ru.darf.weathercompose.core.viewmodel.BaseViewModel
-import ru.darf.weathercompose.domain.model.NetworkState
-import ru.darf.weathercompose.domain.usecase.GetWeathersUseCase
+import ru.darf.weathercompose.data.local.DataStorePrefs
+import ru.darf.weathercompose.domain.model.City
+import ru.darf.weathercompose.domain.usecase.DeleteCityUseCase
+import ru.darf.weathercompose.domain.usecase.GetLocalCitiesUseCase
+import ru.darf.weathercompose.domain.usecase.InsertCityUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class CitiesViewModel @Inject constructor(
-    private val getWeathersUseCase: GetWeathersUseCase,
+    private val getLocalCitiesUseCase: GetLocalCitiesUseCase,
+    private val insertCityUseCase: InsertCityUseCase,
+    private val deleteCityUseCase: DeleteCityUseCase,
     @param:ApplicationContext private val context: Context,
+    private val prefs: DataStorePrefs,
 ) : BaseViewModel() {
 
     private val _viewState = MutableStateFlow(CitiesViewState())
     val viewState = _viewState.asStateFlow()
 
     init {
-//        viewModelScope.launch {
-//            startLoading()
-//            val state = viewState.value
-//            val city = state.cities.first()
-//            val response = getWeathersUseCase(
-//                latitude = city.latitude,
-//                longitude = city.longitude
-//            )
-//            when (response) {
-//                is NetworkState.Success -> {
-//                    val weather = response.data?.weatherToday ?: run {
-//                        Toast.makeText(
-//                            context,
-//                            R.string.app_alert_request_error,
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                        stopLoading()
-//                        return@launch
-//                    }
-//                    _viewState.update {
-//                        it.copy(weathers = listOf(weather))
-//                    }
-//                }
-//
-//                is NetworkState.Error -> {
-//                    logE(response.error.message)
-//                    Toast.makeText(
-//                        context,
-//                        R.string.app_alert_request_error,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//                is NetworkState.ServerError -> {
-//                    Toast.makeText(
-//                        context,
-//                        R.string.app_alert_server_error,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            }
-//            stopLoading()
-//        }
+        viewModelScope.launch {
+            startLoading()
+            val cities = getLocalCitiesUseCase()
+            _viewState.update {
+                it.copy(
+                    cities = cities
+                )
+            }
+            stopLoading()
+        }
     }
 
     fun startLoading() {
@@ -85,6 +54,42 @@ class CitiesViewModel @Inject constructor(
             it.copy(
                 isLoading = false
             )
+        }
+    }
+
+    fun updateOpenSearchCityDialog(value: Boolean) {
+        _viewState.update {
+            it.copy(
+                openSearchCityDialog = value
+            )
+        }
+    }
+
+    fun insertCity(city: City) {
+        viewModelScope.launch {
+            startLoading()
+            insertCityUseCase(city)
+            val cities = getLocalCitiesUseCase()
+            _viewState.update {
+                it.copy(
+                    cities = cities
+                )
+            }
+            stopLoading()
+        }
+    }
+
+    fun deleteCity(city: City) {
+        viewModelScope.launch {
+            startLoading()
+            deleteCityUseCase(city)
+            val cities = getLocalCitiesUseCase()
+            _viewState.update {
+                it.copy(
+                    cities = cities
+                )
+            }
+            stopLoading()
         }
     }
 }

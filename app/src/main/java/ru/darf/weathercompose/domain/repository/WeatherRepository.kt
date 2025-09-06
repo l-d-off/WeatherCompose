@@ -16,4 +16,8 @@ interface WeatherRepository {
     ): NetworkState<List<City>>
 
     suspend fun getLocalCities(): List<City>
+
+    suspend fun insertCity(city: City)
+
+    suspend fun deleteCity(city: City)
 }

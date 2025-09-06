@@ -121,7 +121,8 @@ private fun WeatherContent(
             ) {
                 if (viewState.weathers.isNotEmpty()) {
                     items(
-                        items = viewState.weathers
+                        items = viewState.weathers,
+                        key = { weather -> weather.city.id }
                     ) { weather ->
                         Card(
                             content = {
