@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.darf.weathercompose.R
@@ -42,6 +43,11 @@ class CitiesViewModel @Inject constructor(
     private val searchTextFlow = MutableStateFlow("")
 
     init {
+        getLocalCities()
+        searchCities()
+    }
+
+    private fun getLocalCities() {
         viewModelScope.launch {
             startLoading()
             val cities = getLocalCitiesUseCase()
@@ -52,8 +58,12 @@ class CitiesViewModel @Inject constructor(
             }
             stopLoading()
         }
+    }
+
+    private fun searchCities() {
         viewModelScope.launch {
             searchTextFlow
+                .drop(1)
                 .debounce(500)
                 .distinctUntilChanged()
                 .collectLatest { text ->
