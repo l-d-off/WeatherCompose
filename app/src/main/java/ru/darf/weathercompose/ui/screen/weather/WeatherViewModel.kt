@@ -2,6 +2,7 @@ package ru.darf.weathercompose.ui.screen.weather
 
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +38,10 @@ class WeatherViewModel @Inject constructor(
     private var refreshJob: Job? = null
 
     init {
+        initRequest()
+    }
+
+    private fun initRequest() {
         viewModelScope.launch {
             startLoading()
             val cities = getLocalCitiesUseCase()
@@ -47,11 +52,7 @@ class WeatherViewModel @Inject constructor(
             when (response) {
                 is NetworkState.Success -> {
                     val weathers = response.data ?: run {
-                        Toast.makeText(
-                            context,
-                            R.string.app_alert_request_error,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showToast(R.string.app_alert_request_error)
                         stopLoading()
                         return@launch
                     }
@@ -69,23 +70,23 @@ class WeatherViewModel @Inject constructor(
                 }
 
                 is NetworkState.Error -> {
-                    Toast.makeText(
-                        context,
-                        R.string.app_alert_request_error,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast(R.string.app_alert_request_error)
                 }
 
                 is NetworkState.ServerError -> {
-                    Toast.makeText(
-                        context,
-                        R.string.app_alert_server_error,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast(R.string.app_alert_server_error)
                 }
             }
             stopLoading()
         }
+    }
+
+    private fun showToast(@StringRes message: Int) {
+        Toast.makeText(
+            context,
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     fun goToCitiesScreen(navController: NavHostController) {
