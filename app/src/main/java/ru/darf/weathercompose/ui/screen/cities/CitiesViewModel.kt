@@ -1,32 +1,44 @@
 package ru.darf.weathercompose.ui.screen.cities
 
 import android.content.Context
+import android.widget.Toast
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.darf.weathercompose.R
+import ru.darf.weathercompose.core.logger.logE
 import ru.darf.weathercompose.core.viewmodel.BaseViewModel
-import ru.darf.weathercompose.data.local.DataStorePrefs
 import ru.darf.weathercompose.domain.model.City
+import ru.darf.weathercompose.domain.model.NetworkState
 import ru.darf.weathercompose.domain.usecase.DeleteCityUseCase
+import ru.darf.weathercompose.domain.usecase.GetCitiesUseCase
 import ru.darf.weathercompose.domain.usecase.GetLocalCitiesUseCase
 import ru.darf.weathercompose.domain.usecase.InsertCityUseCase
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class CitiesViewModel @Inject constructor(
     private val getLocalCitiesUseCase: GetLocalCitiesUseCase,
+    private val getCitiesUseCase: GetCitiesUseCase,
     private val insertCityUseCase: InsertCityUseCase,
     private val deleteCityUseCase: DeleteCityUseCase,
     @param:ApplicationContext private val context: Context,
-    private val prefs: DataStorePrefs,
 ) : BaseViewModel() {
 
     private val _viewState = MutableStateFlow(CitiesViewState())
     val viewState = _viewState.asStateFlow()
+
+    private val searchTextFlow = MutableStateFlow("")
 
     init {
         viewModelScope.launch {
@@ -34,10 +46,43 @@ class CitiesViewModel @Inject constructor(
             val cities = getLocalCitiesUseCase()
             _viewState.update {
                 it.copy(
-                    cities = cities
+                    localCities = cities
                 )
             }
             stopLoading()
+        }
+        viewModelScope.launch {
+            searchTextFlow
+                .debounce(500)
+                .distinctUntilChanged()
+                .collectLatest { text ->
+                    val response = getCitiesUseCase(text)
+                    when (response) {
+                        is NetworkState.Success -> {
+                            _viewState.update { state ->
+                                state.copy(
+                                    searchCities = response.data ?: emptyList()
+                                )
+                            }
+                        }
+
+                        is NetworkState.Error -> {
+                            _viewState.update { state ->
+                                state.copy(
+                                    searchCities = emptyList()
+                                )
+                            }
+                        }
+
+                        is NetworkState.ServerError -> {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.app_alert_server_error),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
         }
     }
 
@@ -72,7 +117,7 @@ class CitiesViewModel @Inject constructor(
             val cities = getLocalCitiesUseCase()
             _viewState.update {
                 it.copy(
-                    cities = cities
+                    localCities = cities
                 )
             }
             stopLoading()
@@ -86,10 +131,17 @@ class CitiesViewModel @Inject constructor(
             val cities = getLocalCitiesUseCase()
             _viewState.update {
                 it.copy(
-                    cities = cities
+                    localCities = cities
                 )
             }
             stopLoading()
         }
+    }
+
+    fun updateSearchText(value: TextFieldValue) {
+        _viewState.update {
+            it.copy(searchText = value)
+        }
+        searchTextFlow.value = value.text
     }
 }

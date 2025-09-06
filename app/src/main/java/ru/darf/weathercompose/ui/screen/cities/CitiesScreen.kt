@@ -2,13 +2,17 @@ package ru.darf.weathercompose.ui.screen.cities
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -20,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -99,50 +104,65 @@ private fun CitiesContent(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(
-                items = viewState.cities,
-                key = { city -> city.id }
-            ) { city ->
-                val dismissState = rememberSwipeToDismissBoxState(
-                    confirmValueChange = { dismissValue ->
-                        if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
-                            viewModel.deleteCity(city)
+            if (viewState.localCities.isNotEmpty()) {
+                items(
+                    items = viewState.localCities,
+                    key = { city -> city.id }
+                ) { city ->
+                    val dismissState = rememberSwipeToDismissBoxState(
+                        confirmValueChange = { dismissValue ->
+                            if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
+                                viewModel.deleteCity(city)
+                            }
+                            true
                         }
-                        true
-                    }
-                )
-                SwipeToDismissBox(
-                    state = dismissState,
-                    enableDismissFromStartToEnd = false,
-                    backgroundContent = {
-                        Icon(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(CardDefaults.shape)
-                                .background(Color.Red)
-                                .wrapContentSize(Alignment.CenterEnd)
-                                .padding(end = 8.dp),
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete city",
-                            tint = Color.White
+                    )
+                    SwipeToDismissBox(
+                        state = dismissState,
+                        enableDismissFromStartToEnd = false,
+                        backgroundContent = {
+                            Icon(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(CardDefaults.shape)
+                                    .background(Color.Red)
+                                    .wrapContentSize(Alignment.CenterEnd)
+                                    .padding(end = 8.dp),
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete city",
+                                tint = Color.White
+                            )
+                        }
+                    ) {
+                        Card(
+                            modifier = Modifier.animateItem(),
+                            content = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Text(
+                                        text = city.name,
+                                        fontSize = 20.sp
+                                    )
+                                    if (city.region.isNotBlank()) {
+                                        Text(
+                                            text = city.region,
+                                            fontSize = 14.sp
+                                        )
+                                    }
+                                }
+                            }
                         )
                     }
-                ) {
-                    Card(
-                        modifier = Modifier.animateItem(),
-                        content = {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Text(
-                                    modifier = Modifier.weight(1f),
-                                    text = city.name,
-                                    fontSize = 20.sp
-                                )
-                            }
-                        }
+                }
+            } else {
+                item {
+                    Text(
+                        text = stringResource(R.string.cities_screen_stub_empty_cities),
+                        fontSize = 20.sp
                     )
                 }
             }
@@ -157,7 +177,75 @@ private fun CitiesContent(
                 viewModel.updateOpenSearchCityDialog(false)
             }
         ) {
-
+            Scaffold(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.7f)
+                    .clip(RoundedCornerShape(8.dp)),
+                containerColor = Color.White,
+                contentColor = Color.Unspecified,
+                topBar = {
+                    TextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = viewState.searchText,
+                        onValueChange = viewModel::updateSearchText,
+                        placeholder = {
+                            Text(
+                                text = stringResource(R.string.cities_screen_placeholder_search),
+                                color = Color.LightGray
+                            )
+                        },
+                        maxLines = 1
+                    )
+                }
+            ) { innerPadding ->
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (viewState.searchCities.isNotEmpty()) {
+                        items(
+                            items = viewState.searchCities,
+                        ) { city ->
+                            Card(
+                                onClick = {
+                                    viewModel.insertCity(city)
+                                    viewModel.updateOpenSearchCityDialog(false)
+                                },
+                                content = {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = city.name,
+                                            fontSize = 20.sp
+                                        )
+                                        if (city.region.isNotBlank()) {
+                                            Text(
+                                                text = city.region,
+                                                fontSize = 14.sp
+                                            )
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    } else {
+                        item {
+                            Text(
+                                text = stringResource(R.string.cities_screen_stub_empty_search),
+                                fontSize = 20.sp
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

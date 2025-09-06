@@ -1,6 +1,7 @@
 package ru.darf.weathercompose.ui.screen.weather
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -131,11 +132,21 @@ private fun WeatherContent(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    Text(
+                                    Column(
                                         modifier = Modifier.weight(1f),
-                                        text = weather.city.name,
-                                        fontSize = 20.sp
-                                    )
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = weather.city.name,
+                                            fontSize = 20.sp
+                                        )
+                                        if (weather.city.region.isNotBlank()) {
+                                            Text(
+                                                text = weather.city.region,
+                                                fontSize = 14.sp
+                                            )
+                                        }
+                                    }
                                     Text(
                                         text = stringResource(
                                             R.string.weather_screen_temperature_with_param,

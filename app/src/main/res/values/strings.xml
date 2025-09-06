@@ -20,6 +20,9 @@
 
     <!-- CitiesScreen -->
     <string name="cities_screen_title">Города</string>
+    <string name="cities_screen_placeholder_search">Найти город</string>
+    <string name="cities_screen_stub_empty_cities">Список городов пуст</string>
+    <string name="cities_screen_stub_empty_search">Ничего не найдено</string>
 
 
 </resources>

@@ -3,7 +3,7 @@ package ru.darf.weathercompose.data.remote
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.darf.weathercompose.domain.model.City
+import ru.darf.weathercompose.domain.model.Cities
 import ru.darf.weathercompose.domain.model.Weather
 
 interface WeatherApi {
@@ -22,5 +22,5 @@ interface WeatherApi {
         @Query("count") count: Int = 10,
         @Query("language") language: String = "ru",
         @Query("countryCode") countryCode: String = "RU",
-    ): Response<List<City>>
+    ): Response<Cities>
 }

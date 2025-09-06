@@ -3,6 +3,7 @@ package ru.darf.weathercompose.data.repository
 import ru.darf.weathercompose.data.local.dao.CityDao
 import ru.darf.weathercompose.data.mapper.CityMapper
 import ru.darf.weathercompose.data.remote.WeatherApi
+import ru.darf.weathercompose.domain.model.Cities
 import ru.darf.weathercompose.domain.model.City
 import ru.darf.weathercompose.domain.model.NetworkState
 import ru.darf.weathercompose.domain.model.Weather
@@ -39,7 +40,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override suspend fun getCities(
         name: String,
-    ): NetworkState<List<City>> {
+    ): NetworkState<Cities> {
         return runCatching {
             weatherApi.getCities(
                 name = name,

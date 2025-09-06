@@ -8,10 +8,10 @@ class CityMapper @Inject constructor() {
 
     fun mapToEntity(city: City): CityEntity {
         return CityEntity(
-            id = city.id,
             name = city.name,
             latitude = city.latitude,
-            longitude = city.longitude
+            longitude = city.longitude,
+            region = city.region
         )
     }
 
@@ -20,7 +20,8 @@ class CityMapper @Inject constructor() {
             id = cityEntity.id,
             name = cityEntity.name,
             latitude = cityEntity.latitude,
-            longitude = cityEntity.longitude
+            longitude = cityEntity.longitude,
+            region = cityEntity.region
         )
     }
 

@@ -9,8 +9,10 @@ class GetCitiesUseCase @Inject constructor(
     private val weatherRepository: WeatherRepository,
 ) {
     suspend operator fun invoke(name: String): NetworkState<List<City>> {
-        return weatherRepository.getCities(
-            name = name
-        )
+        return when (val response = weatherRepository.getCities(name)) {
+            is NetworkState.Success -> NetworkState.Success(response.data?.cities)
+            is NetworkState.Error -> response
+            is NetworkState.ServerError -> response
+        }
     }
 }

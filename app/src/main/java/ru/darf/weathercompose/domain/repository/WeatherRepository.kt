@@ -1,5 +1,6 @@
 package ru.darf.weathercompose.domain.repository
 
+import ru.darf.weathercompose.domain.model.Cities
 import ru.darf.weathercompose.domain.model.City
 import ru.darf.weathercompose.domain.model.NetworkState
 import ru.darf.weathercompose.domain.model.Weather
@@ -13,7 +14,7 @@ interface WeatherRepository {
 
     suspend fun getCities(
         name: String,
-    ): NetworkState<List<City>>
+    ): NetworkState<Cities>
 
     suspend fun getLocalCities(): List<City>
 
