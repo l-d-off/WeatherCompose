@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,7 +65,7 @@ class WeatherViewModel @Inject constructor(
                                     temperature = weather.temperature,
                                     weatherCondition = weather.getWeatherCondition()
                                 )
-                            }
+                            }.toImmutableList()
                         )
                     }
                 }
@@ -145,7 +146,7 @@ class WeatherViewModel @Inject constructor(
                                 temperature = weather.temperature,
                                 weatherCondition = weather.getWeatherCondition()
                             )
-                        }
+                        }.toImmutableList()
                     )
                 }
             }

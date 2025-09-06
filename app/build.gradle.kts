@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     // Kotlin
+    implementation(libs.kotlin.collections.immutable)
     implementation(libs.kotlin.serialization.json)
 
     // Navigation

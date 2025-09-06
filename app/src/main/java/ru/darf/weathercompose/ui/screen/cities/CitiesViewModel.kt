@@ -6,6 +6,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,7 +47,7 @@ class CitiesViewModel @Inject constructor(
             val cities = getLocalCitiesUseCase()
             _viewState.update {
                 it.copy(
-                    localCities = cities
+                    localCities = cities.toImmutableList()
                 )
             }
             stopLoading()
@@ -60,7 +62,9 @@ class CitiesViewModel @Inject constructor(
                         is NetworkState.Success -> {
                             _viewState.update { state ->
                                 state.copy(
-                                    searchCities = response.data ?: emptyList()
+                                    searchCities = response.data
+                                        ?.toImmutableList()
+                                        ?: persistentListOf()
                                 )
                             }
                         }
@@ -68,7 +72,7 @@ class CitiesViewModel @Inject constructor(
                         is NetworkState.Error -> {
                             _viewState.update { state ->
                                 state.copy(
-                                    searchCities = emptyList()
+                                    searchCities = persistentListOf()
                                 )
                             }
                         }
@@ -116,7 +120,7 @@ class CitiesViewModel @Inject constructor(
             val cities = getLocalCitiesUseCase()
             _viewState.update {
                 it.copy(
-                    localCities = cities
+                    localCities = cities.toImmutableList()
                 )
             }
             stopLoading()
@@ -130,7 +134,7 @@ class CitiesViewModel @Inject constructor(
             val cities = getLocalCitiesUseCase()
             _viewState.update {
                 it.copy(
-                    localCities = cities
+                    localCities = cities.toImmutableList()
                 )
             }
             stopLoading()
