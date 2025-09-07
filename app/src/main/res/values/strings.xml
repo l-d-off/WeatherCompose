@@ -1,0 +1,28 @@
+<resources>
+
+    <!-- App Core -->
+    <string name="app_name">Прогноз погоды</string>
+    <string name="app_alert_request_error">Ошибка запроса</string>
+    <string name="app_alert_server_error">Ошибка сервера</string>
+
+    <!-- AuthScreen -->
+    <string name="auth_screen_alert_login_not_blank">Логин не может быть пустым</string>
+    <string name="auth_screen_alert_password_not_blank">Пароль не может быть пустым</string>
+    <string name="auth_screen_title">Авторизация</string>
+    <string name="auth_screen_placeholder_login">Логин</string>
+    <string name="auth_screen_placeholder_password">Пароль</string>
+    <string name="auth_screen_button_sign_in">Войти</string>
+
+    <!-- WeatherScreen -->
+    <string name="weather_screen_title">Прогноз погоды</string>
+    <string name="weather_screen_temperature_with_param">%s°C</string>
+    <string name="weather_screen_stub_empty_weathers">Список городов пуст</string>
+
+    <!-- CitiesScreen -->
+    <string name="cities_screen_title">Города</string>
+    <string name="cities_screen_placeholder_search">Найти город</string>
+    <string name="cities_screen_stub_empty_cities">Список городов пуст</string>
+    <string name="cities_screen_stub_empty_search">Ничего не найдено</string>
+
+
+</resources>
